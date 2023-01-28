@@ -1,38 +1,38 @@
 package main
 
+// importing fmt package
 import (
 	"fmt"
 )
 
-// Adapter is the interface that the client expects to see.
-type Adapter interface {
-	// Request is the method that the client expects to see.
-	Request() string
+// IProcess interface
+type IProcess interface {
+	process()
 }
 
-type Adaptee interface {
-	// SpecificRequest is the method that the client expects to see.
-	SpecificRequest() string
+// Adapter struct
+type Adapter struct {
+	adaptee Adaptee
 }
 
-type AdapteeImpl struct{}
-
-// SpecificRequest is the method that the client expects to see.
-func (a *AdapteeImpl) SpecificRequest() string {
-	return "Specific Request"
+// Adapter class method process
+func (adapter Adapter) process() {
+	fmt.Println("Adapter process")
+	adapter.adaptee.convert()
 }
 
-type AdapterImpl struct {
-	Adaptee
+// Adaptee Struct
+type Adaptee struct {
+	adapterType int
 }
 
-// Request is the method that the client expects to see.
-func (a *AdapterImpl) Request() string {
-	return a.SpecificRequest()
+// Adaptee class method convert
+func (adaptee Adaptee) convert() {
+	fmt.Println("Adaptee convert method")
 }
 
-// main function
+// main method
 func main() {
-	adapter := &AdapterImpl{&AdapteeImpl{}}
-	fmt.Println(adapter.Request())
+	var processor IProcess = Adapter{}
+	processor.process()
 }

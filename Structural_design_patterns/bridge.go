@@ -1,39 +1,53 @@
 package main
 
+// importing fmt package
 import (
 	"fmt"
 )
 
-// Bridge is the interface that the client expects to see.
-type Bridge interface {
-	// Request is the method that the client expects to see.
-	Request() string
+// IDrawShape interface
+type IDrawShape interface {
+	drawShape(x [5]float32, y [5]float32)
 }
 
-type Implementation interface {
-	// SpecificRequest is the method that the client expects to see.
-	SpecificRequest() string
+// DrawShape struct
+type DrawShape struct{}
+
+// DrawShape struct has method draw Shape with float x and y coordinates
+func (drawShape DrawShape) drawShape(x [5]float32, y [5]float32) {
+	fmt.Println("Drawing Shape")
 }
 
-type ImplementationImpl struct{}
-
-// SpecificRequest is the method that the client expects to see.
-
-func (a *ImplementationImpl) SpecificRequest() string {
-	return "Specific Request"
+// IContour interace
+type IContour interface {
+	drawContour(x [5]float32, y [5]float32)
+	resizeByFactor(factor int)
 }
 
-type BridgeImpl struct {
-	Implementation
+// DrawContour struct
+type DrawContour struct {
+	x      [5]float32
+	y      [5]float32
+	shape  DrawShape
+	factor int
 }
 
-// Request is the method that the client expects to see.
-func (a *BridgeImpl) Request() string {
-	return a.SpecificRequest()
+// DrawContour method drawContour given the coordinates
+func (contour DrawContour) drawContour(x [5]float32, y [5]float32) {
+	fmt.Println("Drawing Contour")
+	contour.shape.drawShape(contour.x, contour.y)
 }
 
-// main function
+// DrawContour method resizeByFactor given factor
+func (contour DrawContour) resizeByFactor(factor int) {
+	contour.factor = factor
+}
+
+// main method
 func main() {
-	bridge := &BridgeImpl{&ImplementationImpl{}}
-	fmt.Println(bridge.Request())
+	var x = [5]float32{1, 2, 3, 4, 5}
+	var y = [5]float32{1, 2, 3, 4, 5}
+	var contour IContour = DrawContour{x, y, DrawShape{}, 2}
+	contour.drawContour(x, y)
+	contour.resizeByFactor(2)
 }
